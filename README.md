@@ -7,7 +7,7 @@ This repository will contain all the projects and challenges given in the course
 Section Number | Status
 :------------- | :-----
 1 | Completed
-2 | Progressing
+2 | In Progress
 3 |
 4 |
 5 |
