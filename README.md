@@ -1,14 +1,14 @@
 # Javacript - The Complete Guide 2021
 
-This repository will contain all the projects and challenges given in the course that I'll complete.
+This repository will contain all the projects and assignments given in the course that I'll complete.
 
 ### Section - Status
 
 Section Number | Status
 :------------- | :-----
 1 | Completed
-2 | In Progress
-3 |
+2 | Completed
+3 | In Progress
 4 |
 5 |
 6 |
