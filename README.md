@@ -8,11 +8,11 @@ Section Number | Status
 :------------- | :-----
 1 | Completed
 2 | Completed
-3 | In Progress
-4 |
-5 |
-6 |
-7 |
+3 | Completed
+4 | In Progress
+5 | 
+6 | 
+7 | 
 8 |
 9 |
 10 |
