@@ -3,16 +3,28 @@ const MONSTER_ATTACK_VALUE = 15;
 const PLAYER_STRONG_ATTACK_VALUE = 20;
 const PLAYER_HEAL_VALUE = 10;
 
-let chosenMaxLife = 100;
+userEnteredLifeValue = prompt('Maximum Life for you and the Monster?', '100');
+
+let chosenMaxLife = parseInt(userEnteredLifeValue);
+
+if (isNaN(chosenMaxLife) || chosenMaxLife <= 0) {
+    chosenMaxLife = 100;
+}
+
 let currentMonsterHealth = chosenMaxLife;
 let currentPlayerHealth = chosenMaxLife;
 let playerHasBonusLife = true;
 
 adjustHealthBars(chosenMaxLife);
 
+function reset() {
+    currentPlayerHealth = chosenMaxLife;
+    currentMonsterHealth = chosenMaxLife;
+    resetGame(chosenMaxLife);
+}
+
 function attackMonster(attackModeDamage) {
     const damageToMonster = dealMonsterDamage(attackModeDamage);
-    
     currentMonsterHealth -= damageToMonster;
 }
 
@@ -32,12 +44,15 @@ function endRound() {
 
     if (currentMonsterHealth <= 0 && currentPlayerHealth > 0) {
         alert("Congrats! You defeated the monster.!");
+        reset();
     }
     else if (currentPlayerHealth <= 0 && currentMonsterHealth > 0) {
         alert('RIP! You were defeated.!');
+        reset();
     }
     else if (currentPlayerHealth <= 0 && currentMonsterHealth <= 0) {
         alert('What a hero! You sacrificed your life to defeat the monster.!');
+        reset();
     }
 }
 
