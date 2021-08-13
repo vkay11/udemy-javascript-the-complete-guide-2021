@@ -64,6 +64,7 @@ function startGame() {
     console.log('PLAYER SELECTED: ', playerSelection);
     console.log('COMPUTER SELECTED: ', computerSelection);
     console.log(gameWinner);
+    isGameRunning = false;
   }
 }
 
