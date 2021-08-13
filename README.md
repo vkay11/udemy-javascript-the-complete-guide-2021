@@ -10,8 +10,8 @@ Section Number | Status
 2 | Completed
 3 | Completed
 4 | Completed
-5 | In Progress
-6 | 
+5 | Completed
+6 | In Progress
 7 | 
 8 |
 9 |
