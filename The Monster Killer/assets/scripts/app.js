@@ -126,12 +126,20 @@ function healPlayerHandler() {
     
     increasePlayerHealth(adjustedHealValue);
     currentPlayerHealth += adjustedHealValue;
-    
+
+    writeToLog(LOG_EVENT_PLAYER_HEAL, adjustedHealValue, currentPlayerHealth, currentMonsterHealth);    
     endRound();
 }
 
 function outputLogHandler() {
-    console.log(battleLog)
+    let i = 0;
+    for (const logEntry of battleLog) {
+        console.log(`#${i}`);
+        for (const key in logEntry) {
+            console.log(`${key} --> ${logEntry[key]}`);
+        }
+        i++;
+    }
 }
 
 attackBtn.addEventListener('click', attackHandler);
