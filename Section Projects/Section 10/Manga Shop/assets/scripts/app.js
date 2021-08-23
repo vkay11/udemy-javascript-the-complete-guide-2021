@@ -12,33 +12,82 @@ class Manga {
     }
 }
 
-class ShoppingCart {
-  items = [];
+class ElementAttribute {
+  constructor(attributeName, attributeValue) {
+    this.name = attributeName;
+    this.value = attributeValue;
+  }
+}
 
-  render() {
-    const CartElement = document.createElement('section');
-    CartElement.innerHTML = `
-      <h2>Total: ₹${0}</h2>
-      <button>Order Now</button> 
-    `;
-    CartElement.className = 'cart';
-    return CartElement;
+class Component {
+  constructor(renderHookId) {
+    this.hookId = renderHookId;
+  }
+  createRootElement(tag, cssClasses, attributes) {
+    const rootElement = document.createElement(tag);
+    if (cssClasses) {
+      rootElement.className = cssClasses;
+    }
+    if (attributes && attributes.length > 0) {
+      for (const attribute of attributes) {
+        rootElement.setAttribute(attribute.name, attribute.value);
+      }
+    }
+    document.getElementById(this.hookId).append(rootElement);
+    return rootElement;
   }
 }
 
 
-class MangaItem {
-  constructor(manga) {
+class ShoppingCart extends Component {
+  items = [];
+
+  set cartItems(value) {
+    this.items = value;
+    this.totalOutput.innerHTML = `<h2>Total: ₹${this.totalAmount.toFixed(2)}</h2>`;
+  }
+
+  get totalAmount() {
+    const sum = this.items.reduce((prevValue, currentItem) => {
+      return prevValue + currentItem.price;
+    }, 0);
+    return sum;
+  }
+
+  constructor(hookId) {
+    super(hookId);
+  }
+
+  addManga(manga) {
+    const updatedItems = [...this.items];
+    updatedItems.push(manga);
+    this.cartItems = updatedItems;
+  }
+
+  render() {
+    const cartElement = this.createRootElement('section', 'cart');
+    cartElement.innerHTML = `
+      <h2>Total: ₹${0}</h2>
+      <button>Order Now</button> 
+    `;
+    this.totalOutput = cartElement.querySelector('h2');
+    return cartElement;
+  }
+}
+
+
+class MangaItem extends Component {
+  constructor(manga, renderHookId) {
+    super(renderHookId);
     this.manga = manga;
   }
 
   addToCart() {
-    console.log(this.manga);
+    App.addMangaToCart(this.manga);
   }
 
   render() {
-    const mangaElement = document.createElement('li');
-      mangaElement.className = 'product-item';
+    const mangaElement = this.createRootElement('li', 'product-item');
       mangaElement.innerHTML = `
         <div>
           <img src="${this.manga.imageUrl}" alt="${this.manga.title}" >
@@ -59,7 +108,7 @@ class MangaItem {
 }
 
 
-class MangaList {
+class MangaList extends Component{
   mangas = [
     new Manga(
       'Naruto',
@@ -75,35 +124,42 @@ class MangaList {
     )
   ];
 
-  constructor() {}
+  constructor(renderHookId) {
+    super(renderHookId);
+  }
 
   render() {
-    const mangaList = document.createElement('ul');
-    mangaList.className = 'product-list';
+    this.createRootElement('ul', 'product-list', [new ElementAttribute('id', 'prod-list')]);
     for (const manga of this.mangas) {
-      const mangaItem = new MangaItem(manga);
-      const mangaElement = mangaItem.render();
-      mangaList.append(mangaElement);
+      const mangaItem = new MangaItem(manga, 'prod-list');
+      mangaItem.render();
     }
-    return mangaList;
   }
 
 }
 
 class Shop {
   render() {
-    const renderHook = document.getElementById('app');
-    const cart = new ShoppingCart();
-    const cartElement = cart.render();
-    const mangaList = new MangaList();
-    const mangaListElement = mangaList.render();
+    this.cart = new ShoppingCart('app');
+    this.cart.render();
+    const mangaList = new MangaList('app');
+    mangaList.render();
+  }
+}
 
-    renderHook.append(cartElement);
-    renderHook.append(mangaListElement);
+class App {
+  static cart;
+
+  static init() {
+    const shop = new Shop();
+    shop.render();
+    this.cart = shop.cart;
+  }
+
+  static addMangaToCart(manga) {
+     this.cart.addManga(manga);
   }
 }
 
 
-const shop = new Shop();
-shop.render();
-
+App.init();
