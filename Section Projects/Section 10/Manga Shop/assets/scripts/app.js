@@ -20,9 +20,15 @@ class ElementAttribute {
 }
 
 class Component {
-  constructor(renderHookId) {
+  constructor(renderHookId, shouldRender = true) {
     this.hookId = renderHookId;
+    if (shouldRender) {
+      this.render();
+    }
   }
+
+  render() {}
+
   createRootElement(tag, cssClasses, attributes) {
     const rootElement = document.createElement(tag);
     if (cssClasses) {
@@ -55,7 +61,8 @@ class ShoppingCart extends Component {
   }
 
   constructor(hookId) {
-    super(hookId);
+    super(hookId, false);
+    this.render();
   }
 
   addManga(manga) {
@@ -64,12 +71,20 @@ class ShoppingCart extends Component {
     this.cartItems = updatedItems;
   }
 
+  orderManga() {
+    console.log('Ordering');
+    console.log(this.items);
+  }
+
   render() {
     const cartElement = this.createRootElement('section', 'cart');
     cartElement.innerHTML = `
       <h2>Total: ₹${0}</h2>
       <button>Order Now</button> 
     `;
+
+    const orderBtn = cartElement.querySelector('button');
+    orderBtn.addEventListener('click', this.orderManga.bind(this));
     this.totalOutput = cartElement.querySelector('h2');
     return cartElement;
   }
@@ -78,8 +93,9 @@ class ShoppingCart extends Component {
 
 class MangaItem extends Component {
   constructor(manga, renderHookId) {
-    super(renderHookId);
+    super(renderHookId, false);
     this.manga = manga;
+    this.render();
   }
 
   addToCart() {
@@ -109,41 +125,55 @@ class MangaItem extends Component {
 
 
 class MangaList extends Component{
-  mangas = [
-    new Manga(
-      'Naruto',
-      'Mashashi Kishimoto',
-      'https://comicvine.gamespot.com/a/uploads/scale_small/6/67663/4826308-72.jpg',
-      699
-    ),
-    new Manga(
-      'Bleach',
-      'Tite Kubo',
-      'https://images-na.ssl-images-amazon.com/images/I/81JTNoJKKaL.jpg',
-      699
-    )
-  ];
-
+  mangas = [];
+ 
   constructor(renderHookId) {
     super(renderHookId);
+    this.fetchManga();
+  }
+
+  fetchManga() {
+    this.mangas = [
+      new Manga(
+        'Naruto',
+        'Mashashi Kishimoto',
+        'https://comicvine.gamespot.com/a/uploads/scale_small/6/67663/4826308-72.jpg',
+        699
+      ),
+      new Manga(
+        'Bleach',
+        'Tite Kubo',
+        'https://images-na.ssl-images-amazon.com/images/I/81JTNoJKKaL.jpg',
+        699
+      )
+    ];
+    this.renderManga();
+  }
+
+  renderManga() {
+    for (const manga of this.mangas) {
+      new MangaItem(manga, 'prod-list');
+    }
   }
 
   render() {
     this.createRootElement('ul', 'product-list', [new ElementAttribute('id', 'prod-list')]);
-    for (const manga of this.mangas) {
-      const mangaItem = new MangaItem(manga, 'prod-list');
-      mangaItem.render();
+    if (this.mangas && this.mangas.length > 0) {
+      this.renderManga();
     }
   }
 
 }
 
-class Shop {
+class Shop extends Component {
+
+  constructor() {
+    super();
+  }
+
   render() {
     this.cart = new ShoppingCart('app');
-    this.cart.render();
-    const mangaList = new MangaList('app');
-    mangaList.render();
+    new MangaList('app');
   }
 }
 
@@ -152,7 +182,6 @@ class App {
 
   static init() {
     const shop = new Shop();
-    shop.render();
     this.cart = shop.cart;
   }
 
