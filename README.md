@@ -17,8 +17,8 @@ Section Number | Status
 9 | Completed
 10 | Completed
 11 | Completed
-12 | In Progress
-13 |
+12 | Completed
+13 | In Progress
 14 |
 15 |
 16 |
