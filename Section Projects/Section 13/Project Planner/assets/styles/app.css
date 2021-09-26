@@ -126,10 +126,6 @@ button:active {
 }
 
 .tooltip {
-  background-color: #000000;
+  background-color: #ff0062;
   color: #ffffff;
-}
-
-.tooltip:hover {
-  color: greenyellow;
 }
